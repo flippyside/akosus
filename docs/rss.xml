@@ -1,2 +1,47 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://Meekdai.github.io/Gmeek-template</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://Meekdai.github.io/Gmeek-template</link></image><lastBuildDate>Thu, 14 Mar 2024 09:17:29 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>请接着之后的安装步骤执行</title><link>https://Meekdai.github.io/Gmeek-template/post/qing-jie-zhao-zhi-hou-de-an-zhuang-bu-zou-zhi-xing.html</link><description>如果你点击了`READM.md`的链接后，看到了这个页面，请继续之后的安装步骤执行。</description><guid isPermaLink="true">https://Meekdai.github.io/Gmeek-template/post/qing-jie-zhao-zhi-hou-de-an-zhuang-bu-zou-zhi-xing.html</guid><pubDate>Thu, 14 Mar 2024 09:15:10 +0000</pubDate></item><item><title>这是Gmeek模板仓库</title><link>https://Meekdai.github.io/Gmeek-template/post/zhe-shi-Gmeek-mo-ban-cang-ku.html</link><description>通过这个模板创建库，可以大大减少部署Gmeek博客的配置步骤。</description><guid isPermaLink="true">https://Meekdai.github.io/Gmeek-template/post/zhe-shi-Gmeek-mo-ban-cang-ku.html</guid><pubDate>Wed, 20 Dec 2023 07:42:24 +0000</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://flippyside.github.io/akosus</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://flippyside.github.io/akosus</link></image><lastBuildDate>Sun, 13 Oct 2024 06:43:26 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>0x01位运算</title><link>https://flippyside.github.io/akosus/post/0x01-wei-yun-suan.html</link><description># 位运算&#13;
+&#13;
+index&#13;
+- 快速幂 &#13;
+- 二进制状态压缩DP&#13;
+   - 成对变换&#13;
+   - lowbit 运算&#13;
+&#13;
+n的二进制表示的第k位数&#13;
+&#13;
+思路：`n &gt;&gt; k &amp; 1`&#13;
+&#13;
+- 把第k位移到最后一位：`n &gt;&gt; k`&#13;
+- 看最后一位：`n &amp; 1`&#13;
+&#13;
+求二进制数：&#13;
+&#13;
+```cpp&#13;
+int n = 2047;&#13;
+for (int k = log(n) / log(2); k &gt;= 0; k--)&#13;
+{&#13;
+    cout &lt;&lt; (n &gt;&gt; k &amp; 1);&#13;
+}&#13;
+```&#13;
+&#13;
+lowbit(x)：返回x的最后一位1&#13;
+&#13;
+```cpp&#13;
+x &amp; ~x + 1&#13;
+```&#13;
+&#13;
+```cpp&#13;
+x = 1001000&#13;
+~x = 0110111&#13;
+~x + 1 = 0111000 // 补码&#13;
+x &amp; (~x + 1) = 0001000 &#13;
+```&#13;
+&#13;
+将val填充到数组a到每个字节上，int类型占用4个字节&#13;
+&#13;
+```cpp&#13;
+memset(a, val, sizeof a)&#13;
+memset(a, 0x3f, sizeof a) // 赋值为正无穷0x3f3f3f3f&#13;
+```&#13;
+&#13;
+- 算术右移：除以2向下取整。</description><guid isPermaLink="true">https://flippyside.github.io/akosus/post/0x01-wei-yun-suan.html</guid><pubDate>Sun, 13 Oct 2024 06:43:02 +0000</pubDate></item></channel></rss>
