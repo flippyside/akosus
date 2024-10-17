@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 0x05 排序
+
+按照时间复杂度，排序算法可以这样分类：
+对第n个元素排序时，时间复杂度为：
+- O(n^2)：选择排序、插入排序、冒泡排序
+- O(nlogn)：堆排序、归并排序、快速排序
+- 与数值大小范围有关：计数排序、基数排序、桶排序
+
+# O(n^2)的排序算法
+
+## 选择排序
+
+> 不断在序列中找到最小元素，放在起始位置。">
+<meta property="og:title" content="0x05 排序">
+<meta property="og:description" content="# 0x05 排序
+
+按照时间复杂度，排序算法可以这样分类：
+对第n个元素排序时，时间复杂度为：
+- O(n^2)：选择排序、插入排序、冒泡排序
+- O(nlogn)：堆排序、归并排序、快速排序
+- 与数值大小范围有关：计数排序、基数排序、桶排序
+
+# O(n^2)的排序算法
+
+## 选择排序
+
+> 不断在序列中找到最小元素，放在起始位置。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://flippyside.github.io/akosus/post/0x05%20-pai-xu.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>0x05 排序</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">0x05 排序</h1>
+<div class="title-right">
+    <a href="https://flippyside.github.io/akosus" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/flippyside/akosus/issues/2" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>0x05 排序</h1>
+<p>按照时间复杂度，排序算法可以这样分类：<br>
+对第n个元素排序时，时间复杂度为：</p>
+<ul>
+<li>O(n^2)：选择排序、插入排序、冒泡排序</li>
+<li>O(nlogn)：堆排序、归并排序、快速排序</li>
+<li>与数值大小范围有关：计数排序、基数排序、桶排序</li>
+</ul>
+<h1>O(n^2)的排序算法</h1>
+<h2>选择排序</h2>
+<blockquote>
+<p>不断在序列中找到最小元素，放在起始位置。不占用额外内存空间</p>
+</blockquote>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+    <span class="pl-smi">int</span> <span class="pl-s1">min_idx</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span>; <span class="pl-s1">j</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">j</span><span class="pl-c1">++</span>)
+        <span class="pl-k">if</span>(<span class="pl-s1">a</span>[<span class="pl-s1">j</span>] <span class="pl-c1">&lt;</span> <span class="pl-s1">a</span>[<span class="pl-s1">min_idx</span>]) <span class="pl-s1">min_idx</span> <span class="pl-c1">=</span> <span class="pl-s1">j</span>;
+
+    <span class="pl-en">swap</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>], <span class="pl-s1">a</span>[<span class="pl-s1">min_idx</span>]);
+}</pre></div>
+<h2>插入排序</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+    <span class="pl-smi">int</span> <span class="pl-s1">cur</span> <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span>];
+    <span class="pl-smi">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>;
+    <span class="pl-k">while</span>(<span class="pl-s1">j</span> &gt;= <span class="pl-c1">0</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">a</span>[<span class="pl-s1">j</span>] &gt;= <span class="pl-s1">cur</span>){
+        <span class="pl-s1">a</span>[<span class="pl-s1">j</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">j</span>];
+        <span class="pl-s1">j</span><span class="pl-c1">--</span>;
+    }
+    <span class="pl-s1">a</span>[<span class="pl-s1">j</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>] <span class="pl-c1">=</span> <span class="pl-s1">cur</span>;
+}
+<span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s1">a</span>[<span class="pl-s1">i</span>] &lt;&lt; <span class="pl-c1">' '</span>;</pre></div>
+<h2>优化：折半插入</h2>
+<p>二分，可以优化常数</p>
+<ul>
+<li><code class="notranslate">upper_bound(begin, end, num)</code>:从数组的begin位置到end-1位置二分查找第一个 <code class="notranslate">&gt; num</code>的数字，找到返回该数字的地址，不存在则返回end。通过返回的地址减去起始地址begin,得到找到数字在数组中的下标。</li>
+<li><code class="notranslate">lower_bound</code>则是查找第一个 <code class="notranslate">&gt;= num</code>的数字</li>
+<li><code class="notranslate">memmove(str1, str2, len)</code>: str1指向目标数组，str2指向要被copy的原数组，len是复制的字节数</li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+    <span class="pl-smi">int</span> <span class="pl-s1">cur</span> <span class="pl-c1">=</span> <span class="pl-s1">arr</span>[<span class="pl-s1">i</span>];
+    <span class="pl-c">// 找到cur左边(arr[0, i-1])第一个比cur大的数</span>
+    auto <span class="pl-smi">idx</span><span class="pl-s1"></span> <span class="pl-c1">=</span> <span class="pl-en">upper_bound</span>(<span class="pl-s1">arr</span>, <span class="pl-s1">arr</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>, <span class="pl-s1">cur</span>) <span class="pl-c1">-</span> <span class="pl-s1">arr</span>;
+    <span class="pl-c">// 将cur插入到arr[idx]前面</span>
+    <span class="pl-en">memmove</span>(<span class="pl-s1">arr</span> <span class="pl-c1">+</span> <span class="pl-s1">idx</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">arr</span> <span class="pl-c1">+</span> <span class="pl-s1">idx</span>, (<span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-s1">idx</span>) <span class="pl-c1">*</span> <span class="pl-k">sizeof</span>(<span class="pl-smi">int</span>)); <span class="pl-c">// 将arr数组从idx开始的元素整体向右移动一位</span>
+    <span class="pl-s1">arr</span>[<span class="pl-s1">idx</span>] <span class="pl-c1">=</span> <span class="pl-s1">cur</span>;
+}</pre></div>
+<h2>冒泡排序</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">bool</span> <span class="pl-s1">flag</span> <span class="pl-c1">=</span> true;
+<span class="pl-k">while</span>(<span class="pl-s1">flag</span>){
+    <span class="pl-s1">flag</span> <span class="pl-c1">=</span> false;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-k">if</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>] <span class="pl-c1">&gt;</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>]) <span class="pl-en">swap</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>], <span class="pl-s1">a</span>[<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>]), <span class="pl-s1">flag</span> <span class="pl-c1">=</span> true;
+    }
+}</pre></div>
+<h1>O(nlogn)的排序算法</h1>
+<h2>堆排序</h2>
+<ul>
+<li>维护大顶堆，将堆顶元素(最大值)取出，与数组尾部元素交换
+<ul>
+<li>原地建立二叉堆：
+<ul>
+<li>idx_parent(i) = (i - 1) / 2</li>
+<li>idx_leftchild(i) = 2 * i + 1</li>
+<li>idx_rightchild(i) = 2 * i + 2</li>
+<li>从堆底到堆顶，如果下层比上层大，就交换</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">void</span> <span class="pl-en">modify</span>(<span class="pl-smi">int</span> <span class="pl-s1">n</span>, <span class="pl-smi">int</span> <span class="pl-s1">i</span>){
+    <span class="pl-smi">int</span> <span class="pl-s1">le</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">ri</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span> <span class="pl-c1">*</span> <span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">2</span>, <span class="pl-s1">largest</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">le</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">a</span>[<span class="pl-s1">le</span>] <span class="pl-c1">&gt;</span> <span class="pl-s1">a</span>[<span class="pl-s1">largest</span>]) <span class="pl-s1">largest</span> <span class="pl-c1">=</span> <span class="pl-s1">le</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">ri</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">a</span>[<span class="pl-s1">ri</span>] <span class="pl-c1">&gt;</span> <span class="pl-s1">a</span>[<span class="pl-s1">largest</span>]) <span class="pl-s1">largest</span> <span class="pl-c1">=</span> <span class="pl-s1">ri</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">largest</span> <span class="pl-c1">!=</span> <span class="pl-s1">i</span>){
+        <span class="pl-en">swap</span>(<span class="pl-s1">a</span>[<span class="pl-s1">largest</span>], <span class="pl-s1">a</span>[<span class="pl-s1">i</span>]);
+        <span class="pl-en">modify</span>(<span class="pl-s1">n</span>, <span class="pl-s1">largest</span>);
+    }
+}
+
+<span class="pl-smi">void</span> <span class="pl-en">heap_sort</span>(){
+   <span class="pl-c">// 建堆</span>
+   <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &gt;= <span class="pl-c1">0</span>; <span class="pl-s1">i</span><span class="pl-c1">--</span>) <span class="pl-en">modify</span>(<span class="pl-s1">n</span>, <span class="pl-s1">i</span>);
+
+   <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &gt;= <span class="pl-c1">0</span>; <span class="pl-s1">i</span><span class="pl-c1">--</span>){
+      <span class="pl-en">swap</span>(<span class="pl-s1">a</span>[<span class="pl-c1">0</span>], <span class="pl-s1">a</span>[<span class="pl-s1">i</span>]); <span class="pl-c">// 将最大元素放在队尾</span>
+      <span class="pl-en">modify</span>(<span class="pl-s1">i</span>, <span class="pl-c1">0</span>); <span class="pl-c">// 调整剩下的数</span>
+   }
+}</pre></div>
+<h2>归并排序</h2>
+<ul>
+<li>将数组不断分成两部分</li>
+<li>用双指针指向左右两个数组，比较小的数进入临时数组</li>
+<li>将剩下的元素加入临时数组</li>
+<li>将临时数组拷贝到原数组的 <code class="notranslate">[le, ri]</code>的位置上</li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">void</span> <span class="pl-en">merge</span>(<span class="pl-smi">int</span> <span class="pl-s1">le</span>, <span class="pl-smi">int</span> <span class="pl-s1">ri</span>){
+    <span class="pl-smi">int</span> <span class="pl-s1">mid</span> <span class="pl-c1">=</span> (<span class="pl-s1">le</span> <span class="pl-c1">+</span> <span class="pl-s1">ri</span>) &gt;&gt; <span class="pl-c1">1</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">le</span> &gt;= <span class="pl-s1">ri</span>) <span class="pl-k">return</span>;
+    <span class="pl-en">merge</span>(<span class="pl-s1">le</span>, <span class="pl-s1">mid</span>), <span class="pl-en">merge</span>(<span class="pl-s1">mid</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">ri</span>);
+    <span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">le</span>, <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">mid</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">idx</span> <span class="pl-c1">=</span> <span class="pl-c1">-1</span>;
+    <span class="pl-k">while</span>(<span class="pl-s1">i</span> &lt;= <span class="pl-s1">mid</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">j</span> &lt;= <span class="pl-s1">ri</span>){
+        <span class="pl-k">if</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>] &lt;= <span class="pl-s1">a</span>[<span class="pl-s1">j</span>]) <span class="pl-s1">tmp</span>[<span class="pl-c1">++</span><span class="pl-s1">idx</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span><span class="pl-c1">++</span>];
+        <span class="pl-k">else</span> <span class="pl-s1">tmp</span>[<span class="pl-c1">++</span><span class="pl-s1">idx</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">j</span><span class="pl-c1">++</span>];
+    }
+    <span class="pl-k">while</span>(<span class="pl-s1">i</span> &lt;= <span class="pl-s1">mid</span>) <span class="pl-s1">tmp</span>[<span class="pl-c1">++</span><span class="pl-s1">idx</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span><span class="pl-c1">++</span>];
+    <span class="pl-k">while</span>(<span class="pl-s1">j</span> &lt;= <span class="pl-s1">ri</span>) <span class="pl-s1">tmp</span>[<span class="pl-c1">++</span><span class="pl-s1">idx</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">j</span><span class="pl-c1">++</span>];
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-s1">le</span>, <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">idx</span>; <span class="pl-s1">p</span><span class="pl-c1">++</span>, <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">a</span>[<span class="pl-s1">p</span>] <span class="pl-c1">=</span> <span class="pl-s1">tmp</span>[<span class="pl-s1">i</span>];
+}</pre></div>
+<h2>快速排序</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">void</span> <span class="pl-en">qs</span>(<span class="pl-smi">int</span> <span class="pl-s1">le</span>, <span class="pl-smi">int</span> <span class="pl-s1">ri</span>){
+    <span class="pl-k">if</span>(<span class="pl-s1">le</span> &gt;= <span class="pl-s1">ri</span>) <span class="pl-k">return</span>;
+    <span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">le</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>, <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">ri</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">mid</span> <span class="pl-c1">=</span> <span class="pl-s1">a</span>[(<span class="pl-s1">le</span> <span class="pl-c1">+</span> <span class="pl-s1">ri</span>) &gt;&gt; <span class="pl-c1">1</span>];
+    <span class="pl-k">while</span>(<span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">j</span>){
+        <span class="pl-k">do</span>{ <span class="pl-s1">i</span><span class="pl-c1">++</span>; } <span class="pl-k">while</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>] <span class="pl-c1">&lt;</span> <span class="pl-s1">mid</span>);
+        <span class="pl-k">do</span>{ <span class="pl-s1">j</span><span class="pl-c1">--</span>; } <span class="pl-k">while</span>(<span class="pl-s1">a</span>[<span class="pl-s1">j</span>] <span class="pl-c1">&gt;</span> <span class="pl-s1">mid</span>);
+        <span class="pl-k">if</span>(<span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">j</span>) <span class="pl-en">swap</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>], <span class="pl-s1">a</span>[<span class="pl-s1">j</span>]);
+    }
+    <span class="pl-en">qs</span>(<span class="pl-s1">le</span>, <span class="pl-s1">j</span>), <span class="pl-en">qs</span>(<span class="pl-s1">j</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">ri</span>);
+}</pre></div>
+<h1>与数值大小范围有关的排序算法</h1>
+<h2>计数排序</h2>
+<p>思路：</p>
+<ul>
+<li>计算数组cnt：<code class="notranslate">cnt[a[i]] = 数字a[i]出现的次数</code>。这就将原数组a映射为有序的cnt下标</li>
+<li>求cnt的前缀和。由于有序，前缀和即为a<a href="%E8%8B%A5%E6%9C%89%E5%A4%9A%E4%B8%AAa%5Bi%5D%EF%BC%8C%E5%8F%96%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA">i</a>在有序序列中的位置</li>
+</ul>
+<pre class="notranslate"><code class="notranslate">a   1 1 2 2 3 3 4 5 6 9
+idx 0 1 2 3 4 5 6 7 8 9
+cnt 0 2 2 2 1 1 1 0 0 1
+cnt 0 2 4 6 7 8 9 9 9 10
+</code></pre>
+<div class="highlight highlight-source-c"><pre class="notranslate">    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cnt</span>[<span class="pl-s1">a</span>[<span class="pl-s1">i</span>]]<span class="pl-c1">++</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cnt</span>[<span class="pl-s1">i</span>] <span class="pl-c1">+=</span> <span class="pl-s1">cnt</span>[<span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>];
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &gt;= <span class="pl-c1">0</span>; <span class="pl-s1">i</span><span class="pl-c1">--</span>) <span class="pl-s1">b</span>[<span class="pl-s1">cnt</span>[<span class="pl-s1">a</span>[<span class="pl-s1">i</span>]]<span class="pl-c1">--</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span>];
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s1">b</span>[<span class="pl-s1">i</span>] &lt;&lt; <span class="pl-c1">' '</span>; <span class="pl-c">// 注意b[i]下标是从1开始的，不同于cnt和a</span></pre></div>
+<p>应用：数组内元素的值域较小的情况</p>
+<h2>基数排序</h2>
+<ul>
+<li>将数字补齐位数，使它们位数相同</li>
+<li>依次从个位到最高位进行排序
+<ul>
+<li>想象有编号为<code class="notranslate">0~9</code>的10个桶，当前位为x就放入x号桶中。再从左到右取出桶中的数排在一起，就是按当前位排序的结果</li>
+</ul>
+</li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">bucket</span>[<span class="pl-c1">10</span>];
+<span class="pl-smi">void</span> <span class="pl-en">sort</span>(<span class="pl-smi">int</span> <span class="pl-s1">a</span>[]){
+    <span class="pl-en">clear_bucket</span>();
+    <span class="pl-smi">int</span> <span class="pl-s1">len</span> <span class="pl-c1">=</span> <span class="pl-en">cal_length</span>(<span class="pl-s1">maxi</span>);
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">len</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">j</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">j</span><span class="pl-c1">++</span>){
+            <span class="pl-smi">int</span> <span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">get_ith</span>(<span class="pl-s1">a</span>[<span class="pl-s1">j</span>], <span class="pl-s1">i</span>);
+            <span class="pl-s1">bucket</span>[<span class="pl-s1">tmp</span>].<span class="pl-en">push_back</span>(<span class="pl-s1">a</span>[<span class="pl-s1">j</span>]);
+        }
+        <span class="pl-smi">int</span> <span class="pl-s1">idx</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>;
+        <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">j</span> <span class="pl-c1">&lt;</span> <span class="pl-c1">10</span>; <span class="pl-s1">j</span><span class="pl-c1">++</span>){
+            <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">p</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">p</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">bucket</span>[<span class="pl-s1">j</span>].<span class="pl-en">size</span>(); <span class="pl-s1">p</span><span class="pl-c1">++</span>)
+                <span class="pl-s1">a</span>[<span class="pl-s1">idx</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">bucket</span>[<span class="pl-s1">j</span>][<span class="pl-s1">p</span>];
+            <span class="pl-s1">bucket</span>[<span class="pl-s1">j</span>].<span class="pl-en">clear</span>();
+        }
+    }
+}
+
+<span class="pl-smi">void</span> <span class="pl-en">clear_bucket</span>(){
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span><span class="pl-c1">=</span><span class="pl-c1">0</span>;<span class="pl-s1">i</span><span class="pl-c1">&lt;</span><span class="pl-c1">10</span>;<span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">bucket</span>[<span class="pl-s1">i</span>].<span class="pl-en">clear</span>();
+}
+<span class="pl-smi">int</span> <span class="pl-en">cal_length</span>(<span class="pl-smi">int</span> <span class="pl-s1">x</span>){
+    <span class="pl-smi">int</span> <span class="pl-s1">ans</span><span class="pl-c1">=</span><span class="pl-c1">0</span>;
+    <span class="pl-k">while</span>(<span class="pl-s1">x</span>){
+        <span class="pl-s1">x</span> /= <span class="pl-c1">10</span>;
+        <span class="pl-s1">ans</span><span class="pl-c1">++</span>;
+    }
+    <span class="pl-k">return</span> <span class="pl-s1">ans</span>;
+}
+<span class="pl-smi">int</span> <span class="pl-en">get_ith</span>(<span class="pl-smi">int</span> <span class="pl-s1">x</span>, <span class="pl-smi">int</span> <span class="pl-s1">i</span>){
+    <span class="pl-k">while</span>(<span class="pl-s1">i</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">x</span>) <span class="pl-s1">x</span> /= <span class="pl-c1">10</span>, <span class="pl-s1">i</span><span class="pl-c1">--</span>;
+    <span class="pl-k">return</span> <span class="pl-s1">x</span> % <span class="pl-c1">10</span>;
+}</pre></div>
+<h2>桶排序</h2>
+<p>思想：</p>
+<ul>
+<li>将元素放在几个桶里
+<ul>
+<li>如何将元素放入桶中：与计数排序的思想类似，选择一种映射方式 例如<code class="notranslate">(a[i] - mini) / sz</code>，将a[i]映射成桶的下标。这种映射方式应尽量使得元素均匀地分布在几个桶中</li>
+</ul>
+</li>
+<li>将桶中的数分别排好序</li>
+<li>将几个桶的元素合并</li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">bucket</span>[<span class="pl-c1">N</span>];
+
+<span class="pl-smi">void</span> <span class="pl-en">sort</span>(<span class="pl-smi">int</span> <span class="pl-s1">a</span>[]){
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-s1">maxi</span> <span class="pl-c1">=</span> <span class="pl-en">max</span>(<span class="pl-s1">maxi</span>, <span class="pl-s1">a</span>[<span class="pl-s1">i</span>]);
+        <span class="pl-s1">mini</span> <span class="pl-c1">=</span> <span class="pl-en">min</span>(<span class="pl-s1">mini</span>, <span class="pl-s1">a</span>[<span class="pl-s1">i</span>]);
+    }
+    <span class="pl-smi">int</span> <span class="pl-s1">sz</span> <span class="pl-c1">=</span> (<span class="pl-s1">maxi</span> <span class="pl-c1">-</span> <span class="pl-s1">mini</span>) / <span class="pl-s1">n</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>; <span class="pl-c">// 桶内元素区间长</span>
+    <span class="pl-smi">int</span> <span class="pl-s1">cnt</span> <span class="pl-c1">=</span> <span class="pl-s1">n</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>; <span class="pl-c">// 桶的个数</span>
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-s1">bucket</span>[(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>] <span class="pl-c1">-</span> <span class="pl-s1">mini</span>) / <span class="pl-s1">sz</span>].<span class="pl-en">push_back</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>]); <span class="pl-c">// 映射：(a[i] - mini) / sz</span>
+    }
+    <span class="pl-smi">int</span> <span class="pl-s1">len</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">cnt</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-en">insert_sort</span>(<span class="pl-s1">bucket</span>[<span class="pl-s1">i</span>]); <span class="pl-c">// 用插入排序是因为插入排序适用于元素总数较少的情况</span>
+        <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">j</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">bucket</span>[<span class="pl-s1">i</span>].<span class="pl-en">size</span>(); <span class="pl-s1">j</span><span class="pl-c1">++</span>) <span class="pl-s1">a</span>[<span class="pl-s1">len</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">bucket</span>[<span class="pl-s1">i</span>][<span class="pl-s1">j</span>];
+    }
+}
+
+<span class="pl-smi">void</span> <span class="pl-en">insert_sort</span>(<span class="pl-smi">vector</span><span class="pl-c1">&lt;</span><span class="pl-smi">int</span><span class="pl-c1">&gt;</span><span class="pl-c1">&amp;</span> <span class="pl-s1">b</span>){
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">b</span>.<span class="pl-en">size</span>(); <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-smi">int</span> <span class="pl-s1">cur</span> <span class="pl-c1">=</span> <span class="pl-s1">b</span>[<span class="pl-s1">i</span>], <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>;
+        <span class="pl-k">while</span>(<span class="pl-s1">j</span> &gt;= <span class="pl-c1">0</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">b</span>[<span class="pl-s1">j</span>] &gt;= <span class="pl-s1">cur</span>){
+            <span class="pl-s1">b</span>[<span class="pl-s1">j</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>] <span class="pl-c1">=</span> <span class="pl-s1">b</span>[<span class="pl-s1">j</span>];
+            <span class="pl-s1">j</span><span class="pl-c1">--</span>;
+        }
+        <span class="pl-s1">b</span>[<span class="pl-s1">j</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>] <span class="pl-c1">=</span> <span class="pl-s1">cur</span>;
+    }
+}</pre></div>
+<h1>应用</h1>
+<h2>离散化</h2>
+<blockquote>
+<p>思想：把范围很大的一系列数字映射到范围较小的连续数字。例如，问题的范围定义在较大的范围上，但只涉及其中m个数值，且与数值的大小无关，只与其相对顺序有关；于是可以将这m个数映射到1~m上。</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c1">1</span> <span class="pl-c1">2</span> <span class="pl-c1">49</span> <span class="pl-c1">300</span> <span class="pl-c1">202000</span> ...
+<span class="pl-c1">0</span> <span class="pl-c1">1</span> <span class="pl-c1">2</span>   <span class="pl-c1">3</span>     <span class="pl-c1">4</span> ...</pre></div>
+<p>problem: 已知数组a，a中元素可能有重复，去重后有m个元素。将每个a[i]用一个1～m之间的数代替，并保持大小顺序不变</p>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">int</span> <span class="pl-en">query</span>(<span class="pl-smi">int</span> <span class="pl-s1">x</span>){ <span class="pl-c">// 查询x映射到1~m中的哪个数字</span>
+    <span class="pl-k">return</span> <span class="pl-en">lower_bound</span>(<span class="pl-s1">b</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">b</span> <span class="pl-c1">+</span> <span class="pl-s1">m</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">x</span>) <span class="pl-c1">-</span> <span class="pl-s1">b</span>; <span class="pl-c">// 查找第一个 &gt;= x 的数字, 其实就是 x</span>
+}
+
+<span class="pl-smi">void</span> <span class="pl-en">discrete</span>(){
+    <span class="pl-en">sort</span>(<span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-s1">n</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>);
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>)
+        <span class="pl-k">if</span>(<span class="pl-s1">i</span> <span class="pl-c1">==</span> <span class="pl-c1">1</span> <span class="pl-c1">||</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span>] <span class="pl-c1">!=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>]) <span class="pl-s1">b</span>[<span class="pl-c1">++</span><span class="pl-s1">m</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span>];
+}</pre></div>
+<h3>problem: cinema</h3>
+<p>problem: 给定n个人、m部电影，三个数组分别代表第i个人懂得的语言、第i个电影的配音语言、第i个电影的字幕语言。如何使得开心值最大？</p>
+<ul>
+<li>将所有语言(设有s种)放入一个数组，离散化，用一个0～s-1之间的整数代替每种语言</li>
+<li>用数组记录会第i种语言的人数</li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">int</span> <span class="pl-s1">a</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// 第i个人懂得的语言</span>
+<span class="pl-smi">int</span> <span class="pl-s1">b</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// 第i个电影的语音语言</span>
+<span class="pl-smi">int</span> <span class="pl-s1">c</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// 第i个电影的字幕语言</span>
+<span class="pl-smi">int</span> <span class="pl-s1">tmp</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// 临时数组，存放a、b、c中的所有数字</span>
+<span class="pl-smi">int</span> <span class="pl-s1">s</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// 离散化后</span>
+<span class="pl-smi">int</span> <span class="pl-s1">know</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// know[i] = 懂第i种语言的人数</span>
+<span class="pl-smi">int</span> <span class="pl-s1">total</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>, <span class="pl-s1">len</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>;
+
+<span class="pl-smi">int</span> <span class="pl-en">query</span>(<span class="pl-smi">int</span> <span class="pl-s1">x</span>){
+    <span class="pl-k">return</span> <span class="pl-en">lower_bound</span>(<span class="pl-s1">s</span>, <span class="pl-s1">s</span> <span class="pl-c1">+</span> <span class="pl-s1">len</span>, <span class="pl-s1">x</span>) <span class="pl-c1">-</span> <span class="pl-s1">s</span>;
+}
+ 
+<span class="pl-smi">void</span> <span class="pl-en">discrete</span>(){
+    <span class="pl-en">sort</span>(<span class="pl-s1">tmp</span>, <span class="pl-s1">tmp</span> <span class="pl-c1">+</span> <span class="pl-s1">total</span>);
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">total</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>)
+        <span class="pl-k">if</span>(<span class="pl-s1">i</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span> <span class="pl-c1">||</span> <span class="pl-s1">tmp</span>[<span class="pl-s1">i</span>] <span class="pl-c1">!=</span> <span class="pl-s1">tmp</span>[<span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>]) <span class="pl-s1">s</span>[<span class="pl-s1">len</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">tmp</span>[<span class="pl-s1">i</span>];
+}
+
+<span class="pl-smi">int</span> <span class="pl-en">main</span>(){
+    <span class="pl-smi">int</span> <span class="pl-s1">n</span>, <span class="pl-s1">m</span>;
+    <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">n</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">a</span>[<span class="pl-s1">i</span>], <span class="pl-s1">tmp</span>[<span class="pl-s1">total</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span>];
+    <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">m</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">m</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">b</span>[<span class="pl-s1">i</span>], <span class="pl-s1">tmp</span>[<span class="pl-s1">total</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">b</span>[<span class="pl-s1">i</span>];
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">m</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">c</span>[<span class="pl-s1">i</span>], <span class="pl-s1">tmp</span>[<span class="pl-s1">total</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">c</span>[<span class="pl-s1">i</span>];
+
+    <span class="pl-en">discrete</span>();
+
+    <span class="pl-en">memset</span>(<span class="pl-s1">know</span>, <span class="pl-c1">0</span>, <span class="pl-k">sizeof</span> <span class="pl-s1">know</span>);
+  
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">know</span>[<span class="pl-en">query</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>])]<span class="pl-c1">++</span>;
+
+    <span class="pl-smi">int</span> <span class="pl-s1">max_idx</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">m</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-smi">int</span> <span class="pl-s1">num_b</span> <span class="pl-c1">=</span> <span class="pl-s1">know</span>[<span class="pl-en">query</span>(<span class="pl-s1">b</span>[<span class="pl-s1">i</span>])], <span class="pl-s1">num_c</span> <span class="pl-c1">=</span> <span class="pl-s1">know</span>[<span class="pl-en">query</span>(<span class="pl-s1">c</span>[<span class="pl-s1">i</span>])];
+        <span class="pl-k">if</span>(<span class="pl-s1">num_b</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">know</span>[<span class="pl-en">query</span>(<span class="pl-s1">b</span>[<span class="pl-s1">max_idx</span>])] <span class="pl-c1">||</span> (<span class="pl-s1">num_b</span> <span class="pl-c1">==</span> <span class="pl-s1">know</span>[<span class="pl-en">query</span>(<span class="pl-s1">b</span>[<span class="pl-s1">max_idx</span>])] <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">num_c</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">know</span>[<span class="pl-en">query</span>(<span class="pl-s1">c</span>[<span class="pl-s1">max_idx</span>])])){
+            <span class="pl-s1">max_idx</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span>;
+        }
+    }
+  
+    <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s1">max_idx</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>;
+}</pre></div>
+<h2>中位数</h2>
+<h3>货仓选址问题</h3>
+<p>problem: 已知数组a，代表数轴上的n个点。求一个数字，使得每个数字到它的距离之和最小</p>
+<p>思路：建在中位数处。</p>
+<ul>
+<li>排序a</li>
+<li>n为奇：建在 <code class="notranslate">a[(n + 1)/2]</code></li>
+<li>n为偶：<code class="notranslate">a[n/2]~a[n/2+1]</code></li>
+</ul>
+<h3>问题：七夕祭</h3>
+<p>problem:<br>
+要求：</p>
+<ul>
+<li>各行中1一样多</li>
+<li>各列中1一样多<br>
+操作：</li>
+<li>交换2个相邻的数字。每行/列第一个位置和最后一个位置也算相邻<br>
+问：要求最多能满足多少个？在此前提下，至少需要交换多少次数字？</li>
+</ul>
+<p>该问题可被拆分为下面的子问题：</p>
+<h3>均分纸牌问题</h3>
+<p>problem: 已知数组a，代表M个人手中分别有几张纸牌，牌总数为T。可进行操作有：将1张牌由一个人传递给<strong>相邻</strong>的另一个人。至少需要几次操作，使得每个人的纸牌数相等？</p>
+<p>思路：<br>
+首先看问题是否有解：</p>
+<ul>
+<li>T不能整除M，无解</li>
+<li>否则有解</li>
+</ul>
+<p>考虑第一个人，为了使每个人最终有 <code class="notranslate">T/M </code>张牌，第一个人应该给第二个人 <code class="notranslate">a[i]-T/M</code>张牌。所以最少操作数为：</p>
+<p>$$
+\sum_{i=1}^{M}|i*\frac{T}{M}-s[i]|, s为a的前缀和
+$$</p>
+<p>令$b[i] = a[i] - T/M$，最终目标变成每个人手中有0张牌：</p>
+<p>$$
+\sum_{i=1}^{M}|s[i]|，s为b的前缀和
+$$</p>
+<h4>扩展：均分纸牌问题+</h4>
+<p>问题变为，可以将若干张纸牌由一个人传递给<strong>相邻</strong>的另一个人。</p>
+<p>tbc</p>
+<h3>环形均分纸牌</h3>
+<p>将第一个人和第M个人之间切断环后，就成了普通的均分纸牌问题。所以，可以枚举环断开的位置，过程中的最小值即为答案。</p>
+<p>从第k个人之后将环断开，前缀和数组的变化是：<code class="notranslate">s[i] -= s[k]</code>。同上，将a整体减去T/M得到数组b</p>
+<p>$$
+\sum_{i=1}^{M}|s[i] - s[k]|，s为b的前缀和
+$$</p>
+<p>如何求该过程中的最小值？可以将它看作上面的【中位数】问题。<code class="notranslate">s[i]-s[k]</code>是两点距离，即求k取何值时能使 <code class="notranslate">s[k]</code>到 <code class="notranslate">s[1～M]</code>这M个点的距离之和最小，答案就是s数组的中位数。</p>
+<hr>
+<p>回到最初的问题，可类比为行、列上两次【环形均分纸牌】问题。</p>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">ll</span> <span class="pl-s1">row</span>[<span class="pl-c1">N</span>], <span class="pl-s1">col</span>[<span class="pl-c1">N</span>];
+
+<span class="pl-smi">ll</span> <span class="pl-en">circle_split_card</span>(<span class="pl-smi">ll</span> <span class="pl-s1">arr</span>[], <span class="pl-smi">ll</span> <span class="pl-s1">len</span>, <span class="pl-smi">ll</span> <span class="pl-s1">val</span>){
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">len</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">arr</span>[<span class="pl-s1">i</span>] <span class="pl-c1">-=</span> <span class="pl-s1">val</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">len</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">arr</span>[<span class="pl-s1">i</span>] <span class="pl-c1">+=</span> <span class="pl-s1">arr</span>[<span class="pl-s1">i</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>]; <span class="pl-c">// 前缀和</span>
+    <span class="pl-c">// 求最佳选址点</span>
+    <span class="pl-c">// 求中位数</span>
+    <span class="pl-en">sort</span>(<span class="pl-s1">arr</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">arr</span> <span class="pl-c1">+</span> <span class="pl-s1">len</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>); <span class="pl-c">// 排序</span>
+    <span class="pl-smi">int</span> <span class="pl-s1">k</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">len</span> % <span class="pl-c1">2</span>) <span class="pl-s1">k</span> <span class="pl-c1">=</span> <span class="pl-s1">arr</span>[(<span class="pl-s1">len</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>)/<span class="pl-c1">2</span>];
+    <span class="pl-k">else</span> <span class="pl-s1">k</span> <span class="pl-c1">=</span> <span class="pl-s1">arr</span>[<span class="pl-s1">len</span>/<span class="pl-c1">2</span>];
+
+    <span class="pl-smi">ll</span> <span class="pl-s1">ans</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">len</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">ans</span> <span class="pl-c1">+=</span> <span class="pl-en">abs</span>(<span class="pl-s1">arr</span>[<span class="pl-s1">i</span>] <span class="pl-c1">-</span> <span class="pl-s1">k</span>); <span class="pl-c">// 最短距离和</span>
+    <span class="pl-k">return</span> <span class="pl-s1">ans</span>;
+}
+
+<span class="pl-smi">int</span> <span class="pl-en">main</span>(){
+    <span class="pl-smi">int</span> <span class="pl-s1">n</span>, <span class="pl-s1">m</span>, <span class="pl-s1">t</span>;
+    <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">n</span> &gt;&gt; <span class="pl-s1">m</span> &gt;&gt; <span class="pl-s1">t</span>;
+
+    <span class="pl-smi">int</span> <span class="pl-s1">x</span>, <span class="pl-s1">y</span>;
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">t</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+        <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">x</span> &gt;&gt; <span class="pl-s1">y</span>;
+        <span class="pl-s1">row</span>[<span class="pl-s1">x</span>]<span class="pl-c1">++</span>, <span class="pl-s1">col</span>[<span class="pl-s1">y</span>]<span class="pl-c1">++</span>;
+    }
+
+    <span class="pl-smi">ll</span> <span class="pl-s1">sum</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>, <span class="pl-s1">ans_row</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>, <span class="pl-s1">ans_col</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>;
+
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) <span class="pl-s1">sum</span> <span class="pl-c1">+=</span> <span class="pl-s1">row</span>[<span class="pl-s1">i</span>];
+
+    <span class="pl-c">// 判断是否有解</span>
+    <span class="pl-k">if</span>(<span class="pl-s1">sum</span> % <span class="pl-s1">n</span>) <span class="pl-s1">ans_row</span> <span class="pl-c1">=</span> <span class="pl-c1">-1</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">sum</span> % <span class="pl-s1">m</span>) <span class="pl-s1">ans_col</span> <span class="pl-c1">=</span> <span class="pl-c1">-1</span>;
+
+    <span class="pl-k">if</span>(<span class="pl-s1">ans_col</span> <span class="pl-c1">==</span> <span class="pl-c1">-1</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">ans_row</span> <span class="pl-c1">==</span> <span class="pl-c1">-1</span>) <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s">"impossible"</span>;
+    <span class="pl-k">else</span> <span class="pl-k">if</span>(<span class="pl-s1">ans_col</span> <span class="pl-c1">==</span> <span class="pl-c1">-1</span>) <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s">"row "</span> &lt;&lt; <span class="pl-en">circle_split_card</span>(<span class="pl-s1">row</span>, <span class="pl-s1">n</span>, <span class="pl-s1">sum</span>/<span class="pl-s1">n</span>);
+    <span class="pl-k">else</span> <span class="pl-k">if</span>(<span class="pl-s1">ans_row</span> <span class="pl-c1">==</span> <span class="pl-c1">-1</span>) <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s">"column "</span> &lt;&lt; <span class="pl-en">circle_split_card</span>(<span class="pl-s1">col</span>, <span class="pl-s1">m</span>, <span class="pl-s1">sum</span>/<span class="pl-s1">m</span>);
+    <span class="pl-k">else</span> <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s">"both "</span> &lt;&lt; <span class="pl-en">circle_split_card</span>(<span class="pl-s1">row</span>, <span class="pl-s1">n</span>, <span class="pl-s1">sum</span>/<span class="pl-s1">n</span>) <span class="pl-c1">+</span> <span class="pl-en">circle_split_card</span>(<span class="pl-s1">col</span>, <span class="pl-s1">m</span>, <span class="pl-s1">sum</span>/<span class="pl-s1">m</span>);
+}</pre></div>
+<hr>
+<h3>动态维护中位数</h3>
+<p>problem：输入数列a，每当已经读入的整数个数为奇数时，输出它们的中位数</p>
+<p>在线做法：对顶堆，维护两个二叉堆：小顶堆、大顶堆<br>
+性质：</p>
+<ul>
+<li>对于有序序列a(从小到大)：
+<ul>
+<li>大顶堆：存储<code class="notranslate">a[1~n/2]</code></li>
+<li>小顶堆：存储<code class="notranslate">a[n/2+1~n]</code></li>
+</ul>
+</li>
+<li>若某个堆的元素个数过多，就将它的堆顶插入到另一个堆</li>
+<li>中位数即为【小顶堆堆顶】</li>
+<li>每次读入新数x时：
+<ul>
+<li>若x &lt; 中位数，插入大顶堆；</li>
+<li>否则插入小顶堆</li>
+</ul>
+</li>
+</ul>
+<p>有关堆的stl：</p>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-c">// 小顶堆</span>
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">minHeap</span>;
+<span class="pl-c">// 大顶堆</span>
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">less</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">maxHeap</span>;
+<span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">input</span>{<span class="pl-c1">1</span>, <span class="pl-c1">3</span>, <span class="pl-c1">2</span>, <span class="pl-c1">5</span>, <span class="pl-c1">4</span>};
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-en">minHeap</span>(<span class="pl-s1">input</span>.<span class="pl-en">begin</span>(), <span class="pl-s1">input</span>.<span class="pl-en">end</span>());</pre></div>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">minHeap</span>;
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">less</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">maxHeap</span>;
+<span class="pl-smi">int</span> <span class="pl-s1">x</span>;
+<span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">len</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
+    <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">x</span>;
+    <span class="pl-k">if</span>(<span class="pl-s1">minHeap</span>.<span class="pl-en">empty</span>() <span class="pl-c1">||</span> <span class="pl-s1">x</span> &gt;= <span class="pl-s1">minHeap</span>.<span class="pl-en">top</span>()) <span class="pl-s1">minHeap</span>.<span class="pl-en">push</span>(<span class="pl-s1">x</span>);
+    <span class="pl-k">else</span> <span class="pl-s1">maxHeap</span>.<span class="pl-en">push</span>(<span class="pl-s1">x</span>);
+    <span class="pl-k">while</span>(<span class="pl-s1">maxHeap</span>.<span class="pl-en">size</span>() <span class="pl-c1">&gt;</span> <span class="pl-s1">minHeap</span>.<span class="pl-en">size</span>()){
+        <span class="pl-s1">minHeap</span>.<span class="pl-en">push</span>(<span class="pl-s1">maxHeap</span>.<span class="pl-en">top</span>());
+        <span class="pl-s1">maxHeap</span>.<span class="pl-en">pop</span>();
+    }
+    <span class="pl-k">while</span>(<span class="pl-s1">minHeap</span>.<span class="pl-en">size</span>() <span class="pl-c1">&gt;</span> <span class="pl-s1">maxHeap</span>.<span class="pl-en">size</span>() <span class="pl-c1">+</span> <span class="pl-c1">1</span>){
+        <span class="pl-s1">maxHeap</span>.<span class="pl-en">push</span>(<span class="pl-s1">minHeap</span>.<span class="pl-en">top</span>());
+        <span class="pl-s1">minHeap</span>.<span class="pl-en">pop</span>();
+    }
+    <span class="pl-k">if</span>(<span class="pl-s1">i</span> % <span class="pl-c1">2</span>) <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s1">minHeap</span>.<span class="pl-en">top</span>();
+}</pre></div>
+<p>tbc: 不用stl的做法，自己实现堆</p>
+<h2>第k大数</h2>
+<p>首先考虑快速排序的思路：</p>
+<ul>
+<li>选取一个数为基准，把大于它的数交换到左半段，其余的数和基准值一起作为右半段</li>
+<li>对左右两段分别递归</li>
+</ul>
+<p>在“把大于基准的数交换到左半段”的过程中，可以得知大于基准的数的数量cnt。</p>
+<ul>
+<li>cnt &gt; k: 在左半段寻找第k大数</li>
+<li>否则，由于已经知道了左半段有cnt个比基准大的数，只需在右半段寻找第k - cnt大数</li>
+</ul>
+<p>时间复杂度:O(n)</p>
+<h2>逆序对</h2>
+<blockquote>
+<p><code class="notranslate">i &lt; j, a[i] &gt; a[j]</code>，称二者构成逆序对</p>
+</blockquote>
+<p>在归并排序中，求逆序对数量可以顺便求解。</p>
+<p>合并两个有序序列<code class="notranslate">a[l~mid], a[mid+1~r]</code>时，用双指针扫描两个序列，比较a[i]、a[j]大小</p>
+<ul>
+<li><code class="notranslate">a[j] &lt; a[i]</code>: 由于a有序，则<code class="notranslate">a[i ~ mid] &gt;= a[i] &gt; a[j]</code>，即逆序对数量为 <code class="notranslate">mid - i + 1</code></li>
+</ul>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">void</span> <span class="pl-en">merge</span>(<span class="pl-smi">int</span> <span class="pl-s1">le</span>, <span class="pl-smi">int</span> <span class="pl-s1">ri</span>){
+    <span class="pl-k">if</span>(<span class="pl-s1">le</span> &gt;= <span class="pl-s1">ri</span>) <span class="pl-k">return</span>;
+    <span class="pl-smi">int</span> <span class="pl-s1">mid</span> <span class="pl-c1">=</span> (<span class="pl-s1">le</span> <span class="pl-c1">+</span> <span class="pl-s1">ri</span>) / <span class="pl-c1">2</span>;
+    <span class="pl-en">merge</span>(<span class="pl-s1">le</span>, <span class="pl-s1">mid</span>), <span class="pl-en">merge</span>(<span class="pl-s1">mid</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">ri</span>);
+    <span class="pl-smi">int</span> <span class="pl-s1">idx</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>, <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">le</span>, <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">mid</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>;
+    <span class="pl-k">while</span>(<span class="pl-s1">i</span> &lt;= <span class="pl-s1">mid</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">j</span> &lt;= <span class="pl-s1">ri</span>){
+        <span class="pl-k">if</span>(<span class="pl-s1">a</span>[<span class="pl-s1">i</span>] &lt;= <span class="pl-s1">a</span>[<span class="pl-s1">j</span>]) <span class="pl-s1">tmp</span>[<span class="pl-s1">idx</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span><span class="pl-c1">++</span>];
+        <span class="pl-k">else</span> {
+            <span class="pl-s1">cnt</span> <span class="pl-c1">+=</span> <span class="pl-s1">mid</span> <span class="pl-c1">-</span> <span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>;  <span class="pl-c">// &lt;-</span>
+            <span class="pl-s1">tmp</span>[<span class="pl-s1">idx</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">j</span><span class="pl-c1">++</span>];
+        }
+    }
+    <span class="pl-k">while</span>(<span class="pl-s1">i</span> &lt;= <span class="pl-s1">mid</span>) <span class="pl-s1">tmp</span>[<span class="pl-s1">idx</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">i</span><span class="pl-c1">++</span>];
+    <span class="pl-k">while</span>(<span class="pl-s1">j</span> &lt;= <span class="pl-s1">ri</span>) <span class="pl-s1">tmp</span>[<span class="pl-s1">idx</span><span class="pl-c1">++</span>] <span class="pl-c1">=</span> <span class="pl-s1">a</span>[<span class="pl-s1">j</span><span class="pl-c1">++</span>];
+    <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-s1">le</span>, <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">ri</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>, <span class="pl-s1">j</span><span class="pl-c1">++</span>) <span class="pl-s1">a</span>[<span class="pl-s1">i</span>] <span class="pl-c1">=</span> <span class="pl-s1">tmp</span>[<span class="pl-s1">j</span>];
+}</pre></div>
+<h3>奇数码</h3>
+<p>有一个n*n(n为奇数)的的网格，包含1个空格和1～n-1的数字。空格可以上下左右移动。给定两个局面，是否存在一种移动方式？</p>
+<p>思路：将网格转化为一维数组，若两个数组的逆序对个数的奇偶性相同，则存在。</p>
+<ul>
+<li>空格左右移动时，数组序列不变</li>
+<li>上/下移动时，相当于空格上/下的数与它前/后n-1个数交换位置。n-1是偶数，所以逆序对数的变化是偶数。<br>
+e.g.</li>
+</ul>
+<pre class="notranslate"><code class="notranslate">1 2 
+6 4 5
+3 7 8
+
+1 2  6 4 5 3 7 8
+         |
+1 2 5
+6 4  
+3 7 8
+
+1 2 5 6 4  3 7 8
+    |
+    往前交换了n-1次
+</code></pre>
+<h1>参考</h1>
+<p>[【算法】桶排序（Bucket Sort）]详解 <a href="https://blog.csdn.net/qq_27198345/article/details/126516234" rel="nofollow">https://blog.csdn.net/qq_27198345/article/details/126516234</a><br>
+[OIwiki] <a href="https://oi-wiki.org" rel="nofollow">https://oi-wiki.org</a><br>
+《算法竞赛进阶指南》</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://flippyside.github.io/akosus">Akosus's headspace</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","flippyside/akosus");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script><script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</html>
