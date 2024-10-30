@@ -1,5 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Akosus's headspace</title><link>https://flippyside.github.io/akosus</link><description>All you need is attention and passion.</description><copyright>Akosus's headspace</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://flippyside.github.io/akosus</link></image><lastBuildDate>Wed, 23 Oct 2024 11:50:51 +0000</lastBuildDate><managingEditor>Akosus's headspace</managingEditor><ttl>60</ttl><webMaster>Akosus's headspace</webMaster><item><title>0x06 倍增</title><link>https://flippyside.github.io/akosus/post/0x06%20-bei-zeng.html</link><description># 0x06 倍增&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Akosus's headspace</title><link>https://flippyside.github.io/akosus</link><description>All you need is attention and passion.</description><copyright>Akosus's headspace</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://flippyside.github.io/akosus</link></image><lastBuildDate>Wed, 30 Oct 2024 06:11:17 +0000</lastBuildDate><managingEditor>Akosus's headspace</managingEditor><ttl>60</ttl><webMaster>Akosus's headspace</webMaster><item><title>KMP算法</title><link>https://flippyside.github.io/akosus/post/KMP-suan-fa.html</link><description>index&#13;
+- 字符串相关概念&#13;
+  - 前缀函数  &#13;
+- KMP&#13;
+  - next数组&#13;
+  - next+&#13;
+  - KMP匹配过程&#13;
+&#13;
+前言：数据结构课的老师认为这门课【最难不过KMP】。</description><guid isPermaLink="true">https://flippyside.github.io/akosus/post/KMP-suan-fa.html</guid><pubDate>Wed, 30 Oct 2024 06:05:39 +0000</pubDate></item><item><title>0x07 贪心</title><link>https://flippyside.github.io/akosus/post/0x07%20-tan-xin.html</link><description># 0x07 贪心&#13;
+&#13;
+&#13;
+## 问题：股票买卖&#13;
+&#13;
+problem: 给定一个长度为 N 的数组a，数组中的第 i 个数字表示一个给定股票在第 i 天的价格。</description><guid isPermaLink="true">https://flippyside.github.io/akosus/post/0x07%20-tan-xin.html</guid><pubDate>Fri, 25 Oct 2024 14:57:27 +0000</pubDate></item><item><title>0x06 倍增</title><link>https://flippyside.github.io/akosus/post/0x06%20-bei-zeng.html</link><description># 0x06 倍增&#13;
 &#13;
 &gt; [!NOTE]&#13;
 &gt; 倍增：当问题的状态空间比较大的时候，用倍增的思想，只递推2的次幂位置上的值作为代表，而由于【一个整数总能被表示称若干个2的次幂项的和，参考二进制数】，当需要其他位置上的值时，通过【任意整数可以表示为若干2的次幂项的和】这一性质，使用之前的代表值拼成所需的值，保证值不会被遗漏。</description><guid isPermaLink="true">https://flippyside.github.io/akosus/post/0x06%20-bei-zeng.html</guid><pubDate>Wed, 23 Oct 2024 11:50:18 +0000</pubDate></item><item><title>0x05 排序</title><link>https://flippyside.github.io/akosus/post/0x05%20-pai-xu.html</link><description># 0x05 排序&#13;

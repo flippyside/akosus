@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="index
+- 字符串相关概念
+  - 前缀函数  
+- KMP
+  - next数组
+  - next+
+  - KMP匹配过程
+
+前言：数据结构课的老师认为这门课【最难不过KMP】。">
+<meta property="og:title" content="KMP算法">
+<meta property="og:description" content="index
+- 字符串相关概念
+  - 前缀函数  
+- KMP
+  - next数组
+  - next+
+  - KMP匹配过程
+
+前言：数据结构课的老师认为这门课【最难不过KMP】。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://flippyside.github.io/akosus/post/KMP-suan-fa.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>KMP算法</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">KMP算法</h1>
+<div class="title-right">
+    <a href="https://flippyside.github.io/akosus" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/flippyside/akosus/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>index</p>
+<ul>
+<li>字符串相关概念
+<ul>
+<li>前缀函数</li>
+</ul>
+</li>
+<li>KMP
+<ul>
+<li>next数组</li>
+<li>next+</li>
+<li>KMP匹配过程</li>
+</ul>
+</li>
+</ul>
+<p>前言：数据结构课的老师认为这门课【最难不过KMP】。所以专门为KMP写一篇。</p>
+<p>kmp是用来解决【字符串匹配问题】的算法。给你2个字符串T、P，问T是否包含P。</p>
+<p>由于问题涉及字符串，先理解一些字符串的概念。</p>
+<h1>字符串相关概念：</h1>
+<ul>
+<li>
+<p>子串：<code class="notranslate">S[i...j], i &lt;= j</code></p>
+</li>
+<li>
+<p>前缀：从第一个字母开始的子串。</p>
+<ul>
+<li>真前缀：不能是字符串本身</li>
+</ul>
+</li>
+<li>
+<p>后缀：以最后一个字母结尾的子串。</p>
+<ul>
+<li>真后缀：同上。</li>
+</ul>
+</li>
+<li>
+<p>子序列：提出若干元素，不改变相对位置，可以不连续</p>
+</li>
+</ul>
+<p>前缀函数(next函数)：一个长度为 字符串长度 的数组。p[i]为：子串s[0..i]的最长的相等的真前缀与真后缀的长度。</p>
+<ul>
+<li>真前缀 = 真后缀。eg abcdabc：abc = abc</li>
+<li>最长的。eg abababab：ababab = ababab</li>
+<li>真前缀的长度。如果没有相等的真前后缀，为0。</li>
+</ul>
+<p>问题：给定一个字符串，求前缀函数：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">int</span>* <span class="pl-en">prefix</span>(string s){
+    <span class="pl-k">int</span>* p = <span class="pl-k">new</span> <span class="pl-k">int</span>[N];
+    <span class="pl-k">int</span> len = s.<span class="pl-c1">size</span>();
+    <span class="pl-k">for</span>(<span class="pl-k">int</span> i = <span class="pl-c1">1</span>; i &lt; len; i++){
+        <span class="pl-k">int</span> j = p[i - <span class="pl-c1">1</span>]; <span class="pl-c"><span class="pl-c">//</span> 增加一个字符后，j最大为 p[i-1]+1</span>
+  
+        <span class="pl-c"><span class="pl-c">//</span> 若新增的字符s[i]和 上一轮循环的相等真前缀（也是目前最长的）的最后一个字符 不同，就将j退回到上上次循环</span>
+        <span class="pl-k">while</span>(j &gt; <span class="pl-c1">0</span> &amp;&amp; s[i] != s[j]) j = p[j - <span class="pl-c1">1</span>]; <span class="pl-c"><span class="pl-c">//</span> 为什么是p[j-1]而不是p[i--]</span>
+  
+        <span class="pl-c"><span class="pl-c">//</span> j若退回到0，且字符相等，则应为1；若j没有被退回到0，说明s[i]!=s[j]，if为假</span>
+        <span class="pl-k">if</span>(s[i] == s[j])j++; 
+        p[i] = j;
+    }
+    <span class="pl-k">return</span> p;
+}</pre></div>
+<h1>KMP</h1>
+<p>最直接的想法是将T、P的每一位进行匹配，失配时再从P的开头开始匹配。</p>
+<p>当<code class="notranslate">P[i]</code>(假设<code class="notranslate">i&gt;0</code>)失配时，我们其实得到了一个重要信息：<code class="notranslate">P[0, i - 1]</code>是匹配的。如果我们研究一下<code class="notranslate">P[0, i - 1]</code>这一段字符串的性质，是否就不用每次回到P的开头重新匹配呢？</p>
+<p>例如：</p>
+<pre class="notranslate"><code class="notranslate">T:  ababaeba
+P:  abababa
+idx 0123456
+         x
+</code></pre>
+<p><code class="notranslate">P[5]</code>失配，sad！但<code class="notranslate">P[0, 4]</code>是匹配的，即<code class="notranslate">P[0, 4] == T[0, 4]</code>。<br>
+而且在<code class="notranslate">str = P[0, 4] = "ababa"</code>中，<code class="notranslate">str[0, 2]</code>和<code class="notranslate">str[2, 4]</code>相等。我们不妨利用这一性质，将指向P的指针回退到<code class="notranslate">3</code>：</p>
+<pre class="notranslate"><code class="notranslate">T:  ababa e ba
+    01234 5 67
+P:    aba b aba
+      012 3 456
+</code></pre>
+<p>我们发现，由于<code class="notranslate">str[2,4]==P[2,4]==T[2,4]</code>且<code class="notranslate">str[0,2]==str[2,4]</code>，得到<code class="notranslate">str[0,2]==T[2,4]</code>，我们不用再重复去比较<code class="notranslate">str[0,2]</code>和<code class="notranslate">T[2,4]</code>，因为它们相等已经是确定的了！</p>
+<p>这一位置我们用next数组来记录，如果我们计算出所有<code class="notranslate">P[i]</code>的这一位置并存储到next数组中，那么匹配时就不用回到P的开头重新匹配，而是直接回到<code class="notranslate">next[i]</code>开始匹配。</p>
+<h2>next</h2>
+<blockquote>
+<p>定义：<code class="notranslate">next[i]</code>表示当<code class="notranslate">P[i]</code>失配时，<code class="notranslate">i</code>应该回退到的位置。</p>
+</blockquote>
+<p>next的性质如下：<code class="notranslate">next[i]</code> = <code class="notranslate">P[0,i-1]</code>的最大相等真前缀、真后缀的长度。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1f99bd3c-f8c3-4323-b275-8eb9c8e7662b"><img width="702" alt="image" src="https://github.com/user-attachments/assets/1f99bd3c-f8c3-4323-b275-8eb9c8e7662b" style="max-width: 100%;"></a></p>
+<p>为什么失配时，令<code class="notranslate">i = next[i]</code></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1ec5e13b-39a1-4e09-a5ce-e2e87c536f5e"><img width="714" alt="image" src="https://github.com/user-attachments/assets/1ec5e13b-39a1-4e09-a5ce-e2e87c536f5e" style="max-width: 100%;"></a></p>
+<p>如何计算next：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/39dcb497-1642-4059-afa0-c3917c9f7780"><img width="702" alt="image" src="https://github.com/user-attachments/assets/39dcb497-1642-4059-afa0-c3917c9f7780" style="max-width: 100%;"></a></p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">calc_next</span>(string P){
+   <span class="pl-k">int</span> i = <span class="pl-c1">0</span>, j = -<span class="pl-c1">1</span>, len = P.<span class="pl-c1">size</span>();
+   ne[<span class="pl-c1">0</span>] = -<span class="pl-c1">1</span>;
+   <span class="pl-k">while</span>(i &lt; len){
+      <span class="pl-k">if</span>(j == -<span class="pl-c1">1</span> || <span class="pl-c1">equal</span>(P[j], P[i])){
+         <span class="pl-c"><span class="pl-c">//</span> 计算ne[i+1]</span>
+         i++, j++; 
+         ne[i] = j;
+      }
+      <span class="pl-k">else</span> j = ne[j];
+   }
+}</pre></div>
+<h2>kmp匹配过程</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-smi">void</span> <span class="pl-en">kmp</span>(<span class="pl-smi">string</span> <span class="pl-s1">t</span>, <span class="pl-smi">string</span> <span class="pl-s1">p</span>){
+   <span class="pl-smi">int</span> <span class="pl-s1">p1</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>, <span class="pl-s1">p2</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>, <span class="pl-s1">len_t</span> <span class="pl-c1">=</span> <span class="pl-s1">t</span>.<span class="pl-en">size</span>(), <span class="pl-s1">len_p</span> <span class="pl-c1">=</span> <span class="pl-s1">p</span>.<span class="pl-en">size</span>();
+   <span class="pl-k">while</span>(<span class="pl-s1">p1</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">len_t</span>){
+      <span class="pl-k">while</span>(<span class="pl-s1">p2</span> <span class="pl-c1">!=</span> <span class="pl-c1">-1</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">t</span>[<span class="pl-s1">p1</span>] <span class="pl-c1">!=</span> <span class="pl-s1">p</span>[<span class="pl-s1">p2</span>]) <span class="pl-s1">p2</span> <span class="pl-c1">=</span> <span class="pl-s1">ne</span>[<span class="pl-s1">p2</span>]; <span class="pl-c">// 失配，回退P的指针</span>
+      <span class="pl-k">if</span>(<span class="pl-s1">p2</span> <span class="pl-c1">==</span> <span class="pl-c1">-1</span> <span class="pl-c1">||</span> <span class="pl-s1">t</span>[<span class="pl-s1">p1</span>] <span class="pl-c1">==</span> <span class="pl-s1">p</span>[<span class="pl-s1">p2</span>]){ <span class="pl-c">// 匹配，继续比较下一位置</span>
+         <span class="pl-s1">p1</span><span class="pl-c1">++</span>, <span class="pl-s1">p2</span><span class="pl-c1">++</span>;
+      }
+      <span class="pl-k">if</span>(<span class="pl-s1">p2</span> <span class="pl-c1">==</span> <span class="pl-s1">len_p</span>){
+         <span class="pl-s1">cout</span> &lt;&lt; <span class="pl-s1">p1</span> <span class="pl-c1">-</span> <span class="pl-s1">len_p</span> &lt;&lt; <span class="pl-c1">' '</span>;
+         <span class="pl-smi">int</span> <span class="pl-s1">back</span> <span class="pl-c1">=</span> <span class="pl-s1">p2</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span> <span class="pl-c1">-</span> <span class="pl-s1">ne</span>[<span class="pl-s1">p2</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>];
+         <span class="pl-s1">p2</span> <span class="pl-c1">=</span> <span class="pl-s1">ne</span>[<span class="pl-s1">p2</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>];
+         <span class="pl-s1">p1</span> <span class="pl-c1">-=</span> <span class="pl-s1">back</span>; <span class="pl-c">// 处理子串重叠的情况。e.g. aaa in aaaaaaa</span>
+      }
+   }
+}</pre></div>
+<h2>next+</h2>
+<p>我们还可以优化next数组。</p>
+<p>例如，当P、next分别为为 <code class="notranslate">a a a a a a a b, next = {-1 0 1 2 3 4 5 6}</code> 时，若在<code class="notranslate">P[6] = a</code>失配，会重复进行 <code class="notranslate">i = ne[i]</code>，即<code class="notranslate">i = ne[6] = 5, i = ne[5] = 4..., i = ne[0] = -1</code>，才能到达第一个不是a的位置。</p>
+<p>optimized_next: {-1 -1 -1 -1 -1 -1 -1 6}，使得p[6] = a匹配失败时可以跳过前面的 a，直达第一个不是a的位置。</p>
+<p>再例如，<code class="notranslate">aba</code>, <code class="notranslate">p[2] = a</code>匹配失败, <code class="notranslate">ne[2] = 0</code>，<code class="notranslate">p[0] = a</code>，已经知道<code class="notranslate">a</code>一定失配，就不用再匹配了。可以将<code class="notranslate">ne[2]</code> 改为 <code class="notranslate">-1</code></p>
+<p>再例如：</p>
+<pre class="notranslate"><code class="notranslate">          a   b  a  b   a  b  c  a
+    ne    -1  0  0  1   2  3  4  0
+    ne+   -1  0 -1  0  -1  0  4  -1 
+</code></pre>
+<h2>时间复杂度</h2>
+<p>O(n+m)。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://flippyside.github.io/akosus">Akosus's headspace</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","flippyside/akosus");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
