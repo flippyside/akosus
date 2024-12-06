@@ -119,10 +119,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1a283692-51de-4d4a-b3b5-ebedbb834f89"><img width="385" alt="image" src="https://github.com/user-attachments/assets/1a283692-51de-4d4a-b3b5-ebedbb834f89" style="max-width: 100%;"></a></p>
 <p>有关POJ编译的问题：<br>
 POJ上的编译器是C98类型，不支持long long，不能用{a,b}赋值pair类型</p>
-<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">pair</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-c1">SPF</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// {minSPF, maxSPF}</span>
-<span class="pl-s1">pair</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">spf</span>[<span class="pl-c1">N</span>]; <span class="pl-c">// {spf, num}</span>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">pair</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-smi">int</span><span class="pl-c1">&gt;</span> <span class="pl-c1">SPF</span>[<span class="pl-c1">N</span>]<span class="pl-c1"></span>; <span class="pl-c">// {minSPF, maxSPF}</span>
+<span class="pl-s1">pair</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-smi">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">spf</span>[<span class="pl-c1">N</span>]<span class="pl-c1"></span>; <span class="pl-c">// {spf, num}</span>
 
-<span class="pl-smi">bool</span> <span class="pl-en">cmp1</span>(<span class="pl-smi">pair</span><span class="pl-c1">&lt;</span><span class="pl-smi">int</span>, <span class="pl-smi">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">a</span>, <span class="pl-smi">pair</span><span class="pl-c1">&lt;</span><span class="pl-smi">int</span>, <span class="pl-smi">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">b</span>){
+<span class="pl-smi">bool</span> <span class="pl-en">cmp1</span>(<span class="pl-smi">pair</span><span class="pl-c1">&lt;</span><span class="pl-smi">int</span>, <span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">a</span>, <span class="pl-smi">pair</span><span class="pl-c1">&lt;</span><span class="pl-smi">int</span>, <span class="pl-smi">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">b</span>){
     <span class="pl-k">return</span> <span class="pl-s1">a</span>.<span class="pl-c1">first</span> <span class="pl-c1">&gt;</span> <span class="pl-s1">b</span>.<span class="pl-c1">first</span>;
 }
 

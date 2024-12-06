@@ -253,7 +253,7 @@ cnt 0 2 4 6 7 8 9 9 9 10
 </ul>
 </li>
 </ul>
-<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">bucket</span>[<span class="pl-c1">10</span>];
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">bucket</span>[<span class="pl-c1">10</span>]<span class="pl-c1"></span>;
 <span class="pl-smi">void</span> <span class="pl-en">sort</span>(<span class="pl-smi">int</span> <span class="pl-s1">a</span>[]){
     <span class="pl-en">clear_bucket</span>();
     <span class="pl-smi">int</span> <span class="pl-s1">len</span> <span class="pl-c1">=</span> <span class="pl-en">cal_length</span>(<span class="pl-s1">maxi</span>);
@@ -297,7 +297,7 @@ cnt 0 2 4 6 7 8 9 9 9 10
 <li>将桶中的数分别排好序</li>
 <li>将几个桶的元素合并</li>
 </ul>
-<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">bucket</span>[<span class="pl-c1">N</span>];
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">bucket</span>[<span class="pl-c1">N</span>]<span class="pl-c1"></span>;
 
 <span class="pl-smi">void</span> <span class="pl-en">sort</span>(<span class="pl-smi">int</span> <span class="pl-s1">a</span>[]){
     <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">n</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
@@ -502,13 +502,13 @@ $$</p>
 </ul>
 <p>有关堆的stl：</p>
 <div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-c">// 小顶堆</span>
-<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">minHeap</span>;
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">minHeap</span><span class="pl-c1"></span>;
 <span class="pl-c">// 大顶堆</span>
-<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">less</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">maxHeap</span>;
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">less</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">maxHeap</span><span class="pl-c1"></span>;
 <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span> <span class="pl-s1">input</span>{<span class="pl-c1">1</span>, <span class="pl-c1">3</span>, <span class="pl-c1">2</span>, <span class="pl-c1">5</span>, <span class="pl-c1">4</span>};
 <span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-en">minHeap</span>(<span class="pl-s1">input</span>.<span class="pl-en">begin</span>(), <span class="pl-s1">input</span>.<span class="pl-en">end</span>());</pre></div>
-<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">minHeap</span>;
-<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">less</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">maxHeap</span>;
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">greater</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">minHeap</span><span class="pl-c1"></span>;
+<span class="pl-s1">priority_queue</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>, <span class="pl-s1">vector</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span><span class="pl-c1">&gt;</span>, <span class="pl-s1">less</span><span class="pl-c1">&lt;</span><span class="pl-s1">int</span>&gt;&gt; <span class="pl-s1">maxHeap</span><span class="pl-c1"></span>;
 <span class="pl-smi">int</span> <span class="pl-s1">x</span>;
 <span class="pl-k">for</span>(<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>; <span class="pl-s1">i</span> &lt;= <span class="pl-s1">len</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>){
     <span class="pl-s1">cin</span> &gt;&gt; <span class="pl-s1">x</span>;
